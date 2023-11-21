@@ -53,8 +53,92 @@ fun main(args: Array<String>) {
     val sumaUno = Suma (1,1)
     val sumaDos = Suma(null,1)
     val sumaTres = Suma(1,null)
+    //companion object, ya no puedo mandar nulos
+    val sumaCuatro = Suma(null,null)
+
+    sumaUno.sumar()
+    sumaDos.sumar()
+    sumaTres.sumar()
+    sumaCuatro.sumar()
+    println(Suma.pi)
+    println(Suma.elevarAlCuadrado(2))
+    println(Suma.historialSumas)
+
+
+    //llama constructor papa, pi, elevar, e historial de sumas
+
+
+    //Arreglos
+    //Arreglo Estatico
+    val arregloEstatico: Array<Int> = arrayOf<Int>(1,2,3)
+    println(arregloEstatico)
+
+    //Cambiar numero de elementos
+    //Arreglo Dinamico
+    val arregloDinamico: ArrayList<Int> = arrayListOf<Int>(
+        1,2,3,4,5,6,7,8,9,10
+    )
+    println(arregloDinamico)
+    arregloDinamico.add(11)
+    arregloDinamico.add(12)
+    println(arregloDinamico)
+
+    //arreglos tienen metodos especiales
+
+    //FOR EACH -> Unit devuelve unit no devuelve nada
+    //Iterar un arreglo
+    val respuestaForEach: Unit = arregloDinamico
+        .forEach{ valorActual: Int -> //antes flecha colocar los parametros que tengamos, despues flecha codigo que queremos
+            println("Valor actual: ${valorActual}")
+        }
+    //it (en ingles eso) significa el elemento iterado, solo sirve cuando se tiene un parametro
+    arregloDinamico.forEach{println("Valor actual: ${it}")}
+
+
+    //Aparte de devolvernos el valor del arreglo
+    //Nos dice cual es el indice del valor actual
+    arregloEstatico
+        .forEachIndexed{indice: Int, valorActual: Int ->
+            println("Valor ${valorActual} Indice: ${indice}")
+        }
+    println(respuestaForEach)
+
+    //Modificar el arreglo (objeto que esta llegando calcular edad y guardar en objeto)
+    //modificar objeto mediante uno de los operadores
+
+
+    //MAP -> Muta el arreglo (cambia al arreglo, lo transforma en otro y crea arreglo)
+    //1) Enviemos el nuevo valor de la iteracion
+    //2) Nos devuelve es un NUEVO ARREGLO con los valores modificado
+
+    val respuestaMap: List<Double> = arregloDinamico
+        .map{valorActual: Int ->
+        return@map valorActual.toDouble() + 100.00}
+
+    println(respuestaMap)
+    val respuestaMapDos = arregloDinamico.map{it + 15}
+
+    
+    //Filter -> FILTRAR EL ARREGLO
+    //por cada iteracion devolver una expresion, devuelve un nuevo arreglo filtrado
+    //1) Devolver una expresion (TRUE o FALSE)
+    //2) Nuevo arreglo filtrado
+    val respuestaFilter: List<Int> = arregloDinamico
+        .filter{valorActual: Int ->
+            //Expresion Condicion
+            val mayoresACinco: Boolean = valorActual > 5
+            return@filter mayoresACinco
+        }
+
+    val respuestaFilterDos= arregloDinamico.filter{
+        it <= 5
+    }
+    println(respuestaFilter)
+    println(respuestaFilterDos)
+
 
 }
+
 
 abstract class NumerosJava{ //Solo instanciarla para inicializar otras clases
     protected val numeroUno: Int
@@ -120,9 +204,47 @@ class Suma( //Constructor primario Suma
 
     )
 
+    //Nuevo constructor y usar la clase
+//atributos val pi = 3.14, poner funciones
+
+//dentro de clase tenemos modificador de clase, dentro de clase para crear metodo
+//podemos poner public por defecto, o usar private o protected, en construccion podiamos definir ejm public var algo: String, no es solo para metroso, tambien para propiedades
+
+
+//Crear constructor y funcion sumar junto al companion object
+
+    constructor(//  cuarto constructor
+        uno: Int?, // parametros
+        dos: Int? // parametros
+    ) : this(  // llamada constructor primario
+        if (uno == null) 0 else uno,
+        if (dos == null) 0 else uno
+    )
+
+    // public por defecto, o usar private o protected
+    public fun sumar(): Int {
+        val total = numeroUno + numeroDos
+        // Suma.agregarHistorial(total)
+        agregarHistorial(total)
+        return total
+    }
+    // Atributos y Metodos "Compartidos"
+    companion object {
+        // entre las instancias
+        val pi = 3.14
+        fun elevarAlCuadrado(num: Int): Int {
+            return num * num
+        }
+        val historialSumas = arrayListOf<Int>()
+        fun agregarHistorial(valorNuevaSuma:Int){
+            historialSumas.add(valorNuevaSuma)
+        }
+    }
 }
 
-//Nuevo constructor y usar la clase
+
+
+
 
 
 //void -> unit (no devuelven nada)
