@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">B2023gr2swMilton</string>
     <string name="title_activity_aresources">AResources</string>
+
     <string name="saludo">Buenos dias</string>
+    <color name="color_text">#000000</color>
+    <color name="color_back">#FFFFFF</color>
 </resources>
