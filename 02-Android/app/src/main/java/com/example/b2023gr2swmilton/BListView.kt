@@ -2,12 +2,18 @@ package com.example.b2023gr2swmilton
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import com.google.android.material.snackbar.Snackbar
 
 class BListView : AppCompatActivity() {
     val arreglo = BBaseDatosMemoria.arregloBEntrenador
+    var posicionItemSeleccionado = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blist_view)
@@ -23,7 +29,55 @@ class BListView : AppCompatActivity() {
         val botonAnadirListView = findViewById<Button>(R.id.btn_anadir_list_view)
         botonAnadirListView
             .setOnClickListener{
-                //click
+                anadirEntrenador(adaptador)
             }
+    }
+    fun anadirEntrenador(
+        adaptador: ArrayAdapter<BEntrenador>
+    ){
+        arreglo.add(
+            BEntrenador(
+                1,
+                "Adrian",
+                "Descripción"
+            )
+        )
+        adaptador.notifyDataSetChanged()
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ){
+        super.onCreateContextMenu(menu, v, menuInfo)
+        //llenamos las opciones del menu
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu) //R es carpeta de recursos, usando recurso de menu dentro de carpeta de recursos
+        //Obtener el id del ArrayListSeleccionado
+        val info = menuInfo as AdapterView.AdapterContextMenuInfo //Abriendo menu contextual
+        val posicion = info.position
+        posicionItemSeleccionado= posicion
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){ //Aqui llega el item, vemos el identificador
+            R.id.mi_editar ->{
+                mostrarSnackbar("${posicionItemSeleccionado}")
+                return true
+            }
+            R.id.mi_eliminar ->{
+                mostrarSnackbar("${posicionItemSeleccionado}")
+                //abrirDialogo()
+                return true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    fun mostrarSnackbar(texto:String){
+        val snack = Snackbar.make(findViewById(R.id.lv_list_view),
+            texto, Snackbar.LENGTH_LONG)
+        snack.show()
     }
 }
