@@ -5,4 +5,10 @@
     <string name="saludo">Buenos dias</string>
     <color name="color_text">#000000</color>
     <color name="color_back">#FFFFFF</color>
+
+    <string-array name="string_array_opciones_dialogo">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miercoles</item>
+    </string-array>
 </resources>
