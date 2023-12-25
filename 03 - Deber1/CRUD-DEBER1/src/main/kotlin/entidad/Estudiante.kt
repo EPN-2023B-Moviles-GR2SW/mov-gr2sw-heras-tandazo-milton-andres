@@ -1,0 +1,4 @@
+package entidad
+
+class Estudiante {
+}
