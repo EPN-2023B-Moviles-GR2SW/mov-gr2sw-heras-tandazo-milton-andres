@@ -5,6 +5,7 @@ import modelo.dao.AsignaturaDAO
 import modelo.entidades.Asignatura
 import modelo.entidades.Estudiante
 import kotlinx.datetime.LocalDate
+import modelo.dao.EstudianteDAO
 
 class EstudianteVista {
     init {
@@ -12,103 +13,51 @@ class EstudianteVista {
     }
 
     private fun mostrarEstudianteVista() {
-        println("Menú Estudiante:")
+        println("\n================= Menú Estudiante =================")
         println("1. Crear Estudiante")
         println("2. Leer Estudiantes")
         println("3. Leer estudiante por cédula")
         println("4. Actualizar Estudiante")
         println("5. Borrar Estudiante")
         println("6. Volver al menú principal")
+        println("===================================================")
         println("Por favor, ingrese el número de la opción deseada:")
-        val opcion = readLine()?.toIntOrNull() ?: return
+
+        val opcion = leerOpcion()
 
         when (opcion) {
-            1 -> {
-                crearEstudiante()
-                mostrarEstudianteVista()
-            }
-            2 -> {
-                leerEstudiante()
-                mostrarEstudianteVista()
-            }
-            3 -> {
-                leerEstudiantePorCedula()
-                mostrarEstudianteVista()
-            }
-            4 -> {
-                actualizarEstudiante()
-                mostrarEstudianteVista()
-            }
-            5 -> {
-                borrarEstudiante()
-                mostrarEstudianteVista()
-            }
-            6 -> {
-                println("Volviendo al menú principal...")
-                MenuPrincipalVista()
-            }
-            else -> {
-                println("Opción no válida.")
-                mostrarEstudianteVista()
-            }
+            1 -> crearEstudiante()
+            2 -> leerEstudiante()
+            3 -> leerEstudiantePorCedula()
+            4 -> actualizarEstudiante()
+            5 -> borrarEstudiante()
+            6 -> println("Volviendo al menú principal...")
+            else -> println("Opción no válida. Intente de nuevo.")
         }
+
+        if (opcion in 1..5) mostrarEstudianteVista()
+        else if (opcion == 6) MenuPrincipalVista()
     }
 
+    private fun leerOpcion(): Int = readLine()?.toIntOrNull() ?: -1
+
     private fun crearEstudiante() {
-        print("\nIngrese el número de cédula del estudiante: ")
-        val cedulaEstudiante = readLine() ?: return
+        val cedulaEstudiante = solicitarInput("\nIngrese el número de cédula del estudiante: ")
+        val edadEstudiante = solicitarInput("\nIngrese la edad del estudiante: ").toIntOrNull() ?: return
 
-        print("\nIngrese la edad del estudiante: ")
-        val edadEstudiante = readLine()?.toInt() ?: return
+        val fechaInscripcionEstudiante = solicitarFecha("\nIngrese la fecha de inscripción (YYYY-MM-DD): ") ?: return
 
-        print("\nIngrese la fecha de inscripción (YYYY-MM-DD): ")
-        val fechaInscripcionEstudiante: LocalDate
-        try {
-            fechaInscripcionEstudiante = LocalDate.parse(readLine().toString())
-        } catch (e: Exception) {
-            println("Respuesta inválida!!!")
-            return
-        }
+        val estadoEstudiante = solicitarEstadoEstudiante("\nIngrese estado del estudiante activo/inactivo (a/i): ") ?: return
 
-        print("\nIngrese estado del estudiante activo/inactivo (a/i): ")
-        val estadoEstudiante = when (readLine()?.trim()?.lowercase()) {
-            "a" -> true
-            "i" -> false
-            else -> {
-                println("Respuesta inválida!!!")
-                return
-            }
-        }
+        val asignaturasEstudiante = solicitarAsignaturasEstudiante()
 
-        val asignaturasEstudiante: ArrayList<Asignatura> = arrayListOf()
-        var bandera = true
-
-        while (bandera) {
-            print("\n¿Desea agregar una asignatura? (s/n)")
-            when (readLine()?.trim()?.lowercase()) {
-                "s" -> {
-                    val asignaturaNueva = crearAsignatura()
-                    if (asignaturaNueva != null) {
-                        asignaturasEstudiante.add(asignaturaNueva)
-                    }
-                }
-                "n" -> {
-                    bandera = false
-                }
-                else -> {
-                    println("\nRespuesta inválida!!!")
-                }
-            }
-        }
-
-        val nuevoEstudiante =
-            Estudiante(cedulaEstudiante, edadEstudiante, fechaInscripcionEstudiante, estadoEstudiante, asignaturasEstudiante)
+        val nuevoEstudiante = Estudiante(cedulaEstudiante, edadEstudiante, fechaInscripcionEstudiante, estadoEstudiante, asignaturasEstudiante)
         EstudianteControlador.crearEstudiante(nuevoEstudiante)
-        print("\nEstudiante registrado!!!")
+        println("\nEstudiante registrado!!!")
     }
 
     private fun leerEstudiante() {
-        println("Listado de estudiantes: ")
+        println("\nListado de estudiantes: ")
         val estudiantes = EstudianteControlador.leerEstudiantes()
 
         if (estudiantes.isNotEmpty()) {
@@ -121,8 +70,7 @@ class EstudianteVista {
     }
 
     private fun leerEstudiantePorCedula() {
-        print("\nIngrese el número de cédula del estudiante que desea buscar: ")
-        val cedula = readLine() ?: return
+        val cedula = solicitarInput("\nIngrese el número de cédula del estudiante que desea buscar: ")
         val estudianteEncontrado = EstudianteControlador.leerEstudiantePorCedula(cedula)
 
         if (estudianteEncontrado != null) {
@@ -132,38 +80,20 @@ class EstudianteVista {
         }
     }
 
+
     private fun actualizarEstudiante() {
-        print("\nIngrese el número de cédula del estudiante que desea actualizar: ")
-        val cedula = readLine() ?: return
+        val cedula = solicitarInput("\nIngrese el número de cédula del estudiante que desea actualizar: ")
+        val estudianteExistente = EstudianteDAO.readByCedula(cedula)
 
-        print("Ingrese la nueva edad del estudiante: ")
-        val edad = readLine()?.toInt() ?: return
-
-        val asignaturasEstudiante: ArrayList<Asignatura> = arrayListOf()
-        var bandera = true
-
-        while (bandera) {
-            print("\n¿Desea agregar una asignatura? (s/n)")
-            when (readLine()?.trim()?.lowercase()) {
-                "s" -> {
-                    print("Ingrese el código de la asignatura a agregar: ")
-                    val codigo = readLine() ?: return
-                    val asignaturaNueva = AsignaturaDAO.readByCodigo(codigo)
-                    if (asignaturaNueva != null) {
-                        asignaturasEstudiante.add(asignaturaNueva)
-                    }
-                }
-                "n" -> {
-                    bandera = false
-                }
-                else -> {
-                    println("\nRespuesta inválida!!!")
-                }
-            }
+        if (estudianteExistente == null) {
+            println("No se encontró ningún estudiante con esa cédula.")
+            return
         }
 
-        val actualizado = EstudianteControlador.actualizarEstudiante(cedula, edad, asignaturasEstudiante)
+        val edad = solicitarInput("Ingrese la nueva edad del estudiante: ").toIntOrNull() ?: return
+        val asignaturasEstudiante = actualizarAsignaturasEstudiante(estudianteExistente)
 
+        val actualizado = EstudianteControlador.actualizarEstudiante(cedula, edad, asignaturasEstudiante)
         if (actualizado) {
             println("Estudiante actualizado correctamente.")
         } else {
@@ -172,9 +102,7 @@ class EstudianteVista {
     }
 
     private fun borrarEstudiante() {
-        print("\nIngrese el número de cédula del estudiante que desea borrar: ")
-        val cedula = readLine() ?: return
-
+        val cedula = solicitarInput("\nIngrese el número de cédula del estudiante que desea borrar: ")
         val eliminado = EstudianteControlador.borrarEstudiante(cedula)
 
         if (eliminado) {
@@ -184,26 +112,112 @@ class EstudianteVista {
         }
     }
 
+
+    // Funciones auxiliares
+    private fun solicitarInput(mensaje: String): String {
+        print(mensaje)
+        return readLine() ?: ""
+    }
+
+    private fun solicitarFecha(mensaje: String): LocalDate? {
+        print(mensaje)
+        return try {
+            LocalDate.parse(readLine().toString())
+        } catch (e: Exception) {
+            println("Formato de fecha inválido.")
+            null
+        }
+    }
+
+    private fun solicitarEstadoEstudiante(mensaje: String): Boolean? {
+        print(mensaje)
+        return when (readLine()?.trim()?.lowercase()) {
+            "a" -> true
+            "i" -> false
+            else -> {
+                println("Respuesta inválida.")
+                null
+            }
+        }
+    }
+
+    private fun solicitarAsignaturasEstudiante(): MutableList<Asignatura> {
+        val asignaturas = mutableListOf<Asignatura>()
+        var continuar = true
+        while (continuar) {
+            println("\n¿Desea agregar una asignatura? (s/n)")
+            when (readLine()?.trim()?.lowercase()) {
+                "s" -> asignaturas.add(crearAsignatura() ?: continue)
+                "n" -> continuar = false
+                else -> println("Respuesta inválida.")
+            }
+        }
+        return asignaturas
+    }
     private fun crearAsignatura(): Asignatura? {
-        print("\nIngrese el nombre de la asignatura: ")
-        val nombreAsignatura = readLine() ?: return null
+        val nombreAsignatura = solicitarInput("\nIngrese el nombre de la asignatura: ")
+        if (nombreAsignatura.isBlank()) {
+            println("Nombre de asignatura no puede estar vacío.")
+            return null
+        }
 
-        print("\nIngrese el código de la asignatura: ")
-        val codigoAsignatura = readLine() ?: return null
+        val codigoAsignatura = solicitarInput("\nIngrese el código de la asignatura: ")
+        if (codigoAsignatura.isBlank()) {
+            println("Código de asignatura no puede estar vacío.")
+            return null
+        }
 
-        print("\nIngrese el horario de la asignatura: ")
-        val horario = readLine() ?: return null
+        val horario = solicitarInput("\nIngrese el horario de la asignatura: ")
+        if (horario.isBlank()) {
+            println("Horario no puede estar vacío.")
+            return null
+        }
 
-        print("\nIngrese el número de créditos de la asignatura: ")
-        val creditosAsignatura = readLine()?.toDoubleOrNull() ?: return null
+        val creditosInput = solicitarInput("\nIngrese el número de créditos de la asignatura: ")
+        val creditosAsignatura = creditosInput.toDoubleOrNull()
+        if (creditosAsignatura == null || creditosAsignatura <= 0) {
+            println("Número de créditos inválido.")
+            return null
+        }
 
-        print("\nIngrese el profesor asignado de la asignatura: ")
-        val profesorAsignatura = readLine() ?: return null
+        val profesorAsignatura = solicitarInput("\nIngrese el profesor asignado de la asignatura: ")
+        if (profesorAsignatura.isBlank()) {
+            println("Nombre del profesor no puede estar vacío.")
+            return null
+        }
 
-        val nuevaAsignatura =
-            Asignatura(nombreAsignatura, codigoAsignatura, horario, creditosAsignatura, profesorAsignatura)
-        AsignaturaDAO.create(nuevaAsignatura)
-        print("\nAsignatura registrada!!!")
+        val nuevaAsignatura = Asignatura(nombreAsignatura, codigoAsignatura, horario, creditosAsignatura, profesorAsignatura)
         return nuevaAsignatura
     }
+    private fun actualizarAsignaturasEstudiante(estudianteExistente: Estudiante): MutableList<Asignatura> {
+        val asignaturasEstudiante = estudianteExistente.asignaturas?.toMutableList() ?: mutableListOf()
+        var bandera = true
+
+        while (bandera) {
+            val respuesta = solicitarInput("\n¿Desea agregar una asignatura? (s/n)").lowercase()
+            when (respuesta) {
+                "s" -> agregarAsignatura(asignaturasEstudiante)
+                "n" -> bandera = false
+                else -> println("\nRespuesta inválida!!!")
+            }
+        }
+        return asignaturasEstudiante
+    }
+    private fun agregarAsignatura(asignaturas: MutableList<Asignatura>) {
+        val codigo = solicitarInput("Ingrese el código de la asignatura a agregar: ")
+        val asignaturaNueva = AsignaturaDAO.readByCodigo(codigo)
+
+        if (asignaturaNueva != null) {
+            if (asignaturas.any { it.codigo == asignaturaNueva.codigo }) {
+                println("Asignatura ya registrada en su horario.")
+            } else {
+                asignaturas.add(asignaturaNueva)
+            }
+        } else {
+            println("No se encontró una asignatura con ese código.")
+        }
+    }
 }
+
+
+

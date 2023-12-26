@@ -7,75 +7,53 @@ class AsignaturaVista {
         mostrarAsignaturaVista()
     }
 
-    private fun mostrarAsignaturaVista(){
-        println("Menú Asignaturas:")
+
+    private fun mostrarAsignaturaVista() {
+        println("\n================= Menú Asignaturas =================")
         println("1. Crear Asignatura")
         println("2. Leer asignaturas")
         println("3. Leer asignatura por código")
         println("4. Actualizar asignatura")
         println("5. Borrar asignatura")
         println("6. Volver al menú principal")
+        println("====================================================")
         println("Por favor, ingrese el número de la opción deseada:")
-        val opcion = readln().toInt()
 
-
+        val opcion = leerOpcion()
 
         when (opcion) {
-            1 -> {
-                crearAsignatura()
-                mostrarAsignaturaVista()
-            }
-            2 -> {
-                leerAsignaturas()
-                mostrarAsignaturaVista()
-            }
-            3 -> {
-                leerAsignaturaPorCodigo()
-                mostrarAsignaturaVista()
-            }
-            4 -> {
-                actualizarAsignatura()
-                mostrarAsignaturaVista()
-            }
-            5 -> {
-                borrarAsignatura()
-                mostrarAsignaturaVista()
-            }
-            6 -> {
-                println("Volviendo al menú principal...")
-                MenuPrincipalVista()
-            }
-            else -> {
-                println("Opción no válida.")
-                mostrarAsignaturaVista()
-            }
+            1 -> crearAsignatura()
+            2 -> leerAsignaturas()
+            3 -> leerAsignaturaPorCodigo()
+            4 -> actualizarAsignatura()
+            5 -> borrarAsignatura()
+            6 -> println("Volviendo al menú principal...")
+            else -> println("Opción no válida. Intente de nuevo.")
         }
+
+        if (opcion in 1..5) mostrarAsignaturaVista()
+        else if (opcion == 6) MenuPrincipalVista()
     }
 
-    fun crearAsignatura(){
-        print("\nIngrese el nombre de la asignatura: ")
-        val nombreAsignatura = readLine()?: return
 
-        print("\nIngrese el codigo de la asignatura: ")
-        val codigoAsignatura = readLine()?: return
+    private fun leerOpcion(): Int = readLine()?.toIntOrNull() ?: -1
 
-        print("\nIngrese el horario de la asignatura: ")
-        val horario = readLine()?: return
+    private fun crearAsignatura() {
+        val nombreAsignatura = solicitarInput("\nIngrese el nombre de la asignatura: ")
+        val codigoAsignatura = solicitarInput("\nIngrese el codigo de la asignatura: ")
+        val horario = solicitarInput("\nIngrese el horario de la asignatura: ")
+        val creditosAsignatura = solicitarInput("\nIngrese el número de créditos de la asignatura: ").toDoubleOrNull()
+        val profesorAsignatura = solicitarInput("\nIngrese el profesor asignado de la asignatura: ")
 
-        print("\nIngrese el número de créditos de la asignatura: ")
-        val creditosAsignatura = readLine()?.toDoubleOrNull()?: return
-
-        print("\nIngrese el profesor asignado de la asignatura: ")
-        val profesorAsignatura = readLine()?: return
-
-        val nuevaAsignatura = AsignaturaControlador.crearAsignatura(nombreAsignatura, codigoAsignatura,horario,creditosAsignatura,profesorAsignatura)
-
-        if (nuevaAsignatura != null) {
-            println("Asignatura registrada: $nuevaAsignatura")
+        if (creditosAsignatura != null) {
+            val nuevaAsignatura = AsignaturaControlador.crearAsignatura(nombreAsignatura, codigoAsignatura, horario, creditosAsignatura, profesorAsignatura)
+            if (nuevaAsignatura != null) println("Asignatura registrada: $nuevaAsignatura")
+            else println("No se pudo registrar la asignatura.")
         } else {
-            println("No se pudo registrar la asignatura.")
+            println("Entrada inválida para créditos.")
         }
     }
+
 
     fun leerAsignaturas(){
         println("Listado de asignaturas: ")
@@ -91,8 +69,7 @@ class AsignaturaVista {
     }
 
     private fun leerAsignaturaPorCodigo() {
-        print("\nIngrese el código de la asignatura que desea buscar: ")
-        val codigo = readLine() ?: return
+        val codigo = solicitarInput("\nIngrese el código de la asignatura que desea buscar: ")
         val asignaturaEncontrada = AsignaturaControlador.leerAsignaturaPorCodigo(codigo)
 
         if (asignaturaEncontrada != null) {
@@ -103,28 +80,24 @@ class AsignaturaVista {
     }
 
     private fun actualizarAsignatura() {
-        print("\nIngrese el código de la asignatura que desea actualizar: ")
-        val codigo = readLine() ?: return
+        val codigo = solicitarInput("\nIngrese el código de la asignatura que desea actualizar: ")
+        val creditos = solicitarInput("Ingrese el nuevo número de créditos de la materia: ").toDoubleOrNull()
+        val profesor = solicitarInput("Ingrese el nuevo profesor de la materia: ")
 
-        print("Ingrese el nuevo número de créditos de la materia: ")
-        val creditos = readLine()?.toDoubleOrNull() ?: return
-
-        print("Ingrese el nuevo profesor de la materia: ")
-        val profesor = readLine() ?: return
-
-        val actualizado = AsignaturaControlador.actualizarAsignatura(codigo, creditos, profesor)
-
-        if (actualizado) {
-            println("Asignatura actualizada correctamente.")
+        if (creditos != null) {
+            val actualizado = AsignaturaControlador.actualizarAsignatura(codigo, creditos, profesor)
+            if (actualizado) {
+                println("Asignatura actualizada correctamente.")
+            } else {
+                println("No se encontró ninguna asignatura con ese código.")
+            }
         } else {
-            println("No se encontró ninguna asignatura con ese código.")
+            println("Entrada inválida para créditos.")
         }
     }
 
     private fun borrarAsignatura() {
-        print("\nIngrese el código de la asignatura que desea borrar: ")
-        val codigo = readLine() ?: return
-
+        val codigo = solicitarInput("\nIngrese el código de la asignatura que desea borrar: ")
         val eliminado = AsignaturaControlador.borrarAsignatura(codigo)
 
         if (eliminado) {
@@ -132,5 +105,10 @@ class AsignaturaVista {
         } else {
             println("No se encontró ninguna asignatura con ese código.")
         }
+    }
+
+    private fun solicitarInput(mensaje: String): String {
+        print(mensaje)
+        return readLine() ?: ""
     }
 }

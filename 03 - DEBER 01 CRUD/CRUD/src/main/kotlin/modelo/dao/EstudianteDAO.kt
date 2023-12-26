@@ -1,69 +1,61 @@
 package modelo.dao
-import modelo.entidades.Asignatura
+
 import modelo.entidades.Estudiante
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import modelo.entidades.Asignatura
 import java.io.File
 import java.io.IOException
 
 class EstudianteDAO {
 
-    companion object{
+    companion object {
+        private const val ARCHIVO_ESTUDIANTES = "src/main/kotlin/archivos/estudiantes.json"
 
-        fun getEstudiantes(): MutableList<Estudiante>{
-            val archivoEstudiantes = File("src/main/kotlin/archivos/estudiantes.json")
-            if(!archivoEstudiantes.exists() || archivoEstudiantes.length() == 0L){
-                archivoEstudiantes.writeText("[]")
-            }
-            val estudiantesJson = File("src/main/kotlin/archivos/estudiantes.json").readText()
-            return Json.decodeFromString<MutableList<Estudiante>>(estudiantesJson)
+        fun getEstudiantes(): MutableList<Estudiante> {
+            val archivo = File(ARCHIVO_ESTUDIANTES)
+            if (!archivo.exists()) archivo.writeText("[]")
+            return Json.decodeFromString(archivo.readText())
         }
 
-        fun create(estudiante: Estudiante){
+        fun create(estudiante: Estudiante) {
             val estudiantesActualizados = getEstudiantes() + estudiante
             escribirArchivo(estudiantesActualizados)
         }
 
         fun update(cedula: String, edad: Int, asignaturas: MutableList<Asignatura>) {
-            val estudiante = readByCedula(cedula)
-            if (estudiante != null) {
-                val estudiantes = getEstudiantes()
-                estudiantes.forEach { est ->
-                    if (est.cedula == cedula) {
-                        est.edad = edad
-                        est.asignaturas?.addAll(asignaturas)
+            getEstudiantes().apply {
+                find { it.cedula == cedula }?.let { est ->
+                    est.edad = edad
+                    est.asignaturas?.let {
+                        //it.clear()
+                        it.addAll(asignaturas)
                     }
                 }
-                escribirArchivo(estudiantes)
-            }
+            }.also { escribirArchivo(it) }
         }
 
-
-
-
-        fun readByCedula(cedula: String): Estudiante? {
-            val estudianteEncontrado = getEstudiantes().find { it.cedula == cedula }
-            return if (estudianteEncontrado != null) {
-                estudianteEncontrado
-            } else {
-                println("\nNo se encontró al estudiante con cédula: $cedula")
-                null
-            }
-        }
+        fun readByCedula(cedula: String): Estudiante? =
+            getEstudiantes().find { it.cedula == cedula }
 
         fun deleteByCedula(cedula: String) {
-            val estudianteEncontrado = readByCedula(cedula)
-            if (estudianteEncontrado != null) {
-                val estudiantes = getEstudiantes()
-                estudiantes.remove(estudianteEncontrado)
-                escribirArchivo(estudiantes)
+            getEstudiantes().let { estudiantes ->
+                readByCedula(cedula)?.let { estudiante ->
+                    estudiantes.remove(estudiante)
+                    escribirArchivo(estudiantes)
+                }
             }
-
         }
 
-        fun escribirArchivo(estudiantes: List<Estudiante>) {
+        //Encapsulamiento
+        fun actualizarEstudiantes(estudiantes: List<Estudiante>) {
+            escribirArchivo(estudiantes)
+        }
+
+        private fun escribirArchivo(estudiantes: List<Estudiante>) {
             try {
-                File("src/main/kotlin/archivos/estudiantes.json").writeText(Json.encodeToString(estudiantes))
+                File(ARCHIVO_ESTUDIANTES).writeText(Json.encodeToString(estudiantes))
             } catch (e: IOException) {
                 println("\nError al escribir en el archivo 'estudiantes.json': ${e.message}")
             }
