@@ -1,9 +1,9 @@
 package controlador
 
-import dao.AsignaturaDAO
-import dao.EstudianteDAO
-import entidades.Asignatura
-import entidades.Estudiante
+import modelo.dao.AsignaturaDAO
+import modelo.dao.EstudianteDAO
+import modelo.entidades.Asignatura
+import modelo.entidades.Estudiante
 import kotlinx.datetime.LocalDate
 
 class EstudianteVista {
@@ -24,11 +24,30 @@ class EstudianteVista {
 
 
         when (opcion) {
-            1 -> crearEstudiante()
-            2 -> leerEstudiante()
-            3 -> leerEstudiantePorCedula()
-            4 -> actualizarEstudiante()
-            5 -> borrarEstudiante()
+            1 -> {
+                crearEstudiante()
+                mostrarEstudianteVista()
+            }
+            2 -> {
+                leerEstudiante()
+                mostrarEstudianteVista()
+
+            }
+            3 -> {
+                leerEstudiantePorCedula()
+                mostrarEstudianteVista()
+
+            }
+            4 -> {
+                actualizarEstudiante()
+                mostrarEstudianteVista()
+
+            }
+            5 -> {
+                borrarEstudiante()
+                mostrarEstudianteVista()
+
+            }
             6 -> {
                 println("Volviendo al menú principal...")
                 MenuPrincipal()
@@ -80,7 +99,7 @@ class EstudianteVista {
             when (readLine()?.trim()?.lowercase()){
                 "s" -> {
                     //Problema aca seguramente
-                    val asignaturaNueva = AsignaturaVista().crearAsignatura()
+                    val asignaturaNueva = crearAsignatura()
                     if(asignaturaNueva != null){
                         asignaturasEstudiante.add(asignaturaNueva)
                     }
@@ -117,7 +136,7 @@ class EstudianteVista {
         print("\nIngrese el número de cédula del estudiante que desea actualizar: ")
         val cedula = readLine()?: return
         if(EstudianteDAO.readByCedula(cedula) != null){
-            print("Ingrese el número de créditos de la materia: ")
+            print("Ingrese la edad del estudiante: ")
             val edad = readLine()?.toInt()?: return
             val asignaturasEstudiante: ArrayList<Asignatura> = arrayListOf()
             var bandera = true
@@ -168,5 +187,27 @@ class EstudianteVista {
                 else -> println("\nOperación cancelada")
             }
         }
+    }
+
+    fun crearAsignatura(): Asignatura?{
+        print("\nIngrese el nombre de la asignatura: ")
+        val nombreAsignatura = readLine()?: return null
+
+        print("\nIngrese el codigo de la asignatura: ")
+        val codigoAsignatura = readLine()?: return null
+
+        print("\nIngrese el horario de la asignatura: ")
+        val horario = readLine()?: return null
+
+        print("\nIngrese el número de créditos de la asignatura: ")
+        val creditosAsignatura = readLine()?.toDoubleOrNull()?: return null
+
+        print("\nIngrese el profesor asignado de la asignatura: ")
+        val profesorAsignatura = readLine()?: return null
+
+        val nuevaAsignatura = Asignatura(nombreAsignatura,codigoAsignatura,horario,creditosAsignatura,profesorAsignatura)
+        AsignaturaDAO.create(nuevaAsignatura)
+        print("\nAsignatura registrada!!!")
+        return nuevaAsignatura
     }
 }

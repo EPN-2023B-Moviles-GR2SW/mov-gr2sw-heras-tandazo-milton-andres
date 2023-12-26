@@ -1,7 +1,7 @@
 package controlador
 
-import dao.AsignaturaDAO
-import entidades.Asignatura
+import modelo.dao.AsignaturaDAO
+import modelo.entidades.Asignatura
 
 class AsignaturaVista {
     init {
@@ -22,11 +22,26 @@ class AsignaturaVista {
 
 
         when (opcion) {
-            1 -> crearAsignatura()
-            2 -> leerAsignaturas()
-            3 -> leerAsignaturaPorCodigo()
-            4 -> actualizarAsignatura()
-            5 -> borrarAsignatura()
+            1 -> {
+                crearAsignatura()
+                mostrarAsignaturaVista()
+            }
+            2 -> {
+                leerAsignaturas()
+                mostrarAsignaturaVista()
+            }
+            3 -> {
+                leerAsignaturaPorCodigo()
+                mostrarAsignaturaVista()
+            }
+            4 -> {
+                actualizarAsignatura()
+                mostrarAsignaturaVista()
+            }
+            5 -> {
+                borrarAsignatura()
+                mostrarAsignaturaVista()
+            }
             6 -> {
                 println("Volviendo al menú principal...")
                 MenuPrincipal()
@@ -61,7 +76,7 @@ class AsignaturaVista {
     }
 
     fun leerAsignaturas(){
-        AsignaturaDAO.getAsignaturas().forEachIndexed{index, asignatura ->
+        AsignaturaDAO.getAsignaturas().forEachIndexed{ index, asignatura ->
             println("Asignatura ${index +1}: $asignatura")
         }
     }

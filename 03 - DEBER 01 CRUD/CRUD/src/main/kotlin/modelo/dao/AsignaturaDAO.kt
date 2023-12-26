@@ -8,12 +8,12 @@ import java.io.IOException
 class AsignaturaDAO {
     companion object {
         fun getAsignaturas(): ArrayList<Asignatura> {
-            val archivoAsignaturas = File("src/main/kotlin/archivos/estudiantes.json")
+            val archivoAsignaturas = File("src/main/kotlin/archivos/asignaturas.json")
             if (!archivoAsignaturas.exists() || archivoAsignaturas.length() == 0L) {
                 archivoAsignaturas.writeText("[]")
             }
             //src
-            val materiasJson = File("src/main/kotlin/archivos/estudiantes.json").readText()
+            val materiasJson = File("src/main/kotlin/archivos/asignaturas.json").readText()
             return Json.decodeFromString<ArrayList<Asignatura>>(materiasJson)
         }
 
@@ -61,9 +61,9 @@ class AsignaturaDAO {
 
         private fun escribirArchivo(asignaturas: List<Asignatura>) {
             try {
-                File("src/main/kotlin/archivos/estudiantes.json").writeText(Json.encodeToString(asignaturas))
+                File("src/main/kotlin/archivos/asignaturas.json").writeText(Json.encodeToString(asignaturas))
             } catch (e: IOException) {
-                println("\nError al escribir en el archivo 'materias.json': ${e.message}")
+                println("\nError al escribir en el archivo 'asignaturas.json': ${e.message}")
             }
         }
         }

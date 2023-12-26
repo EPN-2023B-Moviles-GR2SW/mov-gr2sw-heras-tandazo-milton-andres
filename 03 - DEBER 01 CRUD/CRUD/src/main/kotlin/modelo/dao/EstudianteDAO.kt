@@ -61,7 +61,7 @@ class EstudianteDAO {
             try {
                 File("src/main/kotlin/archivos/estudiantes.json").writeText(Json.encodeToString(estudiantes))
             } catch (e: IOException) {
-                println("\nError al escribir en el archivo 'materias.json': ${e.message}")
+                println("\nError al escribir en el archivo 'estudiantes.json': ${e.message}")
             }
         }
     }
