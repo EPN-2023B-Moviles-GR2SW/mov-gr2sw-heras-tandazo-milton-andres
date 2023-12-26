@@ -9,7 +9,7 @@ data class Estudiante(
     var edad: Int,
     var fechaInscripcion: LocalDate,
     val activo: Boolean,
-    var asignaturas: ArrayList<Asignatura>? = arrayListOf()
+    var asignaturas: MutableList<Asignatura> = mutableListOf()
 ) {
 
 

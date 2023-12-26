@@ -10,13 +10,13 @@ class EstudianteDAO {
 
     companion object{
 
-        fun getEstudiantes(): ArrayList<Estudiante>{
+        fun getEstudiantes(): MutableList<Estudiante>{
             val archivoEstudiantes = File("src/main/kotlin/archivos/estudiantes.json")
             if(!archivoEstudiantes.exists() || archivoEstudiantes.length() == 0L){
                 archivoEstudiantes.writeText("[]")
             }
             val estudiantesJson = File("src/main/kotlin/archivos/estudiantes.json").readText()
-            return Json.decodeFromString<ArrayList<Estudiante>>(estudiantesJson)
+            return Json.decodeFromString<MutableList<Estudiante>>(estudiantesJson)
         }
 
         fun create(estudiante: Estudiante){
@@ -24,18 +24,22 @@ class EstudianteDAO {
             escribirArchivo(estudiantesActualizados)
         }
 
-        fun update(cedula: String, edad: Int, asignaturas: ArrayList<Asignatura> ) {
-            if (readByCedula(cedula) != null) {
+        fun update(cedula: String, edad: Int, asignaturas: MutableList<Asignatura>) {
+            val estudiante = readByCedula(cedula)
+            if (estudiante != null) {
                 val estudiantes = getEstudiantes()
-                estudiantes.forEach { estudiante ->
-                    if (estudiante.cedula == cedula) {
-                        estudiante.edad = edad
-                        estudiante.asignaturas?.addAll(asignaturas)
+                estudiantes.forEach { est ->
+                    if (est.cedula == cedula) {
+                        est.edad = edad
+                        est.asignaturas?.addAll(asignaturas)
                     }
                 }
                 escribirArchivo(estudiantes)
             }
         }
+
+
+
 
         fun readByCedula(cedula: String): Estudiante? {
             val estudianteEncontrado = getEstudiantes().find { it.cedula == cedula }

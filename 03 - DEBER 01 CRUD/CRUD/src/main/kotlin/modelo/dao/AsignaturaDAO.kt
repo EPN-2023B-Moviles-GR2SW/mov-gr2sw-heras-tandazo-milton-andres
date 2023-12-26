@@ -7,14 +7,14 @@ import java.io.IOException
 
 class AsignaturaDAO {
     companion object {
-        fun getAsignaturas(): ArrayList<Asignatura> {
+        fun getAsignaturas(): MutableList<Asignatura> {
             val archivoAsignaturas = File("src/main/kotlin/archivos/asignaturas.json")
             if (!archivoAsignaturas.exists() || archivoAsignaturas.length() == 0L) {
                 archivoAsignaturas.writeText("[]")
             }
             //src
             val materiasJson = File("src/main/kotlin/archivos/asignaturas.json").readText()
-            return Json.decodeFromString<ArrayList<Asignatura>>(materiasJson)
+            return Json.decodeFromString<MutableList<Asignatura>>(materiasJson)
         }
 
         fun create(materia: Asignatura) {

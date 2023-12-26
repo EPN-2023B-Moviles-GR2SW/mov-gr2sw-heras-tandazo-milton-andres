@@ -17,7 +17,7 @@ object EstudianteControlador {
         return EstudianteDAO.readByCedula(cedula)
     }
 
-    fun actualizarEstudiante(cedula: String, nuevaEdad: Int, asignaturas: ArrayList<Asignatura>): Boolean {
+    fun actualizarEstudiante(cedula: String, nuevaEdad: Int, asignaturas: MutableList<Asignatura>): Boolean {
         val estudiante = EstudianteDAO.readByCedula(cedula)
         return if (estudiante != null) {
             EstudianteDAO.update(cedula, nuevaEdad,asignaturas)
