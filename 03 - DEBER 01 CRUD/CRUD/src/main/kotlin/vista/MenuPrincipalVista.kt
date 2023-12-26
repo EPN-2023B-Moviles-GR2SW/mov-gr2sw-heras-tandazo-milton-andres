@@ -1,7 +1,6 @@
-package controlador
+package vista
+import controlador.MenuPrincipalControlador
 import modelo.dao.EstudianteDAO
-import vista.AsignaturaVista
-import vista.EstudianteVista
 
 class MenuPrincipalVista {
     init {
@@ -22,7 +21,7 @@ class MenuPrincipalVista {
 
         when (opcion) {
             1 -> {
-                mostrarHorarios()
+                MenuPrincipalControlador.mostrarHorariosEstudiantesAsignaturas()
                 mostrarMenuPrincipal()
             }
             2 -> EstudianteVista()
@@ -32,14 +31,6 @@ class MenuPrincipalVista {
                 println("Opción no válida.")
                 mostrarMenuPrincipal()
             }
-        }
-    }
-
-
-
-    fun mostrarHorarios(){
-        EstudianteDAO.getEstudiantes().forEachIndexed{ index, estudiante ->
-            println("Estudiante ${index + 1}: $estudiante")
         }
     }
 }

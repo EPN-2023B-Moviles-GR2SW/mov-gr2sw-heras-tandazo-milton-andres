@@ -1,4 +1,4 @@
-package entidades
+package modelo.entidades
 
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable

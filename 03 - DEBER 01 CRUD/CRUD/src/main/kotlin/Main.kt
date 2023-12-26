@@ -1,5 +1,5 @@
-import controlador.MenuPrincipal
+import vista.MenuPrincipalVista
 
-fun main(args: ArrayList<String>){
-    MenuPrincipal()
+fun main(args: Array<String>){
+    MenuPrincipalVista()
 }

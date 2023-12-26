@@ -1,7 +1,6 @@
-package controlador
+package vista
 
-import modelo.dao.AsignaturaDAO
-import modelo.entidades.Asignatura
+import controlador.AsignaturaControlador
 
 class AsignaturaVista {
     init {
@@ -44,7 +43,7 @@ class AsignaturaVista {
             }
             6 -> {
                 println("Volviendo al menú principal...")
-                MenuPrincipal()
+                MenuPrincipalVista()
             }
             else -> {
                 println("Opción no válida.")
@@ -53,74 +52,85 @@ class AsignaturaVista {
         }
     }
 
-    fun crearAsignatura(): Asignatura?{
+    fun crearAsignatura(){
         print("\nIngrese el nombre de la asignatura: ")
-        val nombreAsignatura = readLine()?: return null
+        val nombreAsignatura = readLine()?: return
 
         print("\nIngrese el codigo de la asignatura: ")
-        val codigoAsignatura = readLine()?: return null
+        val codigoAsignatura = readLine()?: return
 
         print("\nIngrese el horario de la asignatura: ")
-        val horario = readLine()?: return null
+        val horario = readLine()?: return
 
         print("\nIngrese el número de créditos de la asignatura: ")
-        val creditosAsignatura = readLine()?.toDoubleOrNull()?: return null
+        val creditosAsignatura = readLine()?.toDoubleOrNull()?: return
 
         print("\nIngrese el profesor asignado de la asignatura: ")
-        val profesorAsignatura = readLine()?: return null
+        val profesorAsignatura = readLine()?: return
 
-        val nuevaAsignatura = Asignatura(nombreAsignatura,codigoAsignatura,horario,creditosAsignatura,profesorAsignatura)
-        AsignaturaDAO.create(nuevaAsignatura)
-        print("\nAsignatura registrada!!!")
-        return nuevaAsignatura
+        val nuevaAsignatura = AsignaturaControlador.crearAsignatura(nombreAsignatura, codigoAsignatura,horario,creditosAsignatura,profesorAsignatura)
+
+        if (nuevaAsignatura != null) {
+            println("Asignatura registrada: $nuevaAsignatura")
+        } else {
+            println("No se pudo registrar la asignatura.")
+        }
     }
 
     fun leerAsignaturas(){
-        AsignaturaDAO.getAsignaturas().forEachIndexed{ index, asignatura ->
-            println("Asignatura ${index +1}: $asignatura")
-        }
-    }
+        println("Listado de asignaturas: ")
+        val asignaturas = AsignaturaControlador.leerAsignaturas()
 
-    fun leerAsignaturaPorCodigo(){
-        print("\nIngrese el código de la asignatura que desea buscar: ")
-        val codigo = readLine()?: return
-        if (AsignaturaDAO.readByCodigo(codigo) != null){
-            print("\n"+ AsignaturaDAO.readByCodigo(codigo))
-        }
-    }
-
-    fun actualizarAsignatura(){
-        print("\nIngrese el código de la asignatura que desea actualizar: ")
-        val codigo = readLine()?: return
-        if(AsignaturaDAO.readByCodigo(codigo) != null){
-            print("Ingrese el número de créditos de la materia: ")
-            val creditos = readLine()?.toDoubleOrNull()?: return
-            print("Ingrese el nuevo profesor de la materia: ")
-            val profesor = readLine()?: return
-            AsignaturaDAO.update(codigo,creditos,profesor)
-            println("\n Asignatura actualizada correctamente!!!")
-        }else{
-            println("No existe dicha asignatura en el sistema")
-            return
-        }
-
-    }
-
-    fun borrarAsignatura(){
-        print("\nIngrese el código de la asignatura que desea borrar: ")
-        val codigo = readLine()?: return
-        if(AsignaturaDAO.readByCodigo(codigo) != null){
-            println("¿Está seguro que desea eliminar la materia? (S/N)")
-            when(readLine()?.trim()?.lowercase()){
-                "s" -> {
-                    AsignaturaDAO.deleteByCodigo(codigo)
-                    println("Materia eliminada con éxito!!!")
-                }
-                "n" -> {
-                    println("\nOperación cancelada")
-                }
-                else -> println("\nOperación cancelada")
+        if (asignaturas.isNotEmpty()) {
+            asignaturas.forEachIndexed { index, asignatura ->
+                println("Asignatura ${index + 1}: $asignatura")
             }
+        } else {
+            println("No hay asignaturas registradas.")
+        }
+    }
+
+    private fun leerAsignaturaPorCodigo() {
+        print("\nIngrese el código de la asignatura que desea buscar: ")
+        val codigo = readLine() ?: return
+        val asignaturaEncontrada = AsignaturaControlador.leerAsignaturaPorCodigo(codigo)
+
+        if (asignaturaEncontrada != null) {
+            println("Asignatura encontrada: $asignaturaEncontrada")
+        } else {
+            println("No se encontró ninguna asignatura con ese código.")
+        }
+    }
+
+    private fun actualizarAsignatura() {
+        print("\nIngrese el código de la asignatura que desea actualizar: ")
+        val codigo = readLine() ?: return
+
+        print("Ingrese el nuevo número de créditos de la materia: ")
+        val creditos = readLine()?.toDoubleOrNull() ?: return
+
+        print("Ingrese el nuevo profesor de la materia: ")
+        val profesor = readLine() ?: return
+
+        val actualizado = AsignaturaControlador.actualizarAsignatura(codigo, creditos, profesor)
+
+        if (actualizado) {
+            println("Asignatura actualizada correctamente.")
+        } else {
+            println("No se encontró ninguna asignatura con ese código.")
+        }
+    }
+
+    private fun borrarAsignatura() {
+        print("\nIngrese el código de la asignatura que desea borrar: ")
+        val codigo = readLine() ?: return
+
+        val eliminado = AsignaturaControlador.borrarAsignatura(codigo)
+
+        if (eliminado) {
+            println("Asignatura eliminada con éxito.")
+        } else {
+            println("No se encontró ninguna asignatura con ese código.")
         }
     }
 }

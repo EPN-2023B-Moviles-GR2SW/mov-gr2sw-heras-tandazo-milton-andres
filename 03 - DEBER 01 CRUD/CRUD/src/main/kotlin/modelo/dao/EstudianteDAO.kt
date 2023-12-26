@@ -1,6 +1,6 @@
-package dao
-import entidades.Asignatura
-import entidades.Estudiante
+package modelo.dao
+import modelo.entidades.Asignatura
+import modelo.entidades.Estudiante
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
