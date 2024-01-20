@@ -1,4 +1,4 @@
-package com.example.examenestudianteasignatura.modelo.entidades
+package com.example.examenestudianteasignatura.modelo
 
 class Asignatura (
     val nombre: String,
@@ -7,5 +7,8 @@ class Asignatura (
     var creditos: Double,
     var profesor: String,
 ){
-
+    override fun toString(): String {
+        return "Código : $codigo\nNombre : $nombre\nCréditos : $creditos\nHorario : $horario\n" +
+                "Profesor a cargo : $profesor"
+    }
 }

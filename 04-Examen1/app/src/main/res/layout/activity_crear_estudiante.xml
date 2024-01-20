@@ -4,6 +4,99 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CrearEstudiante">
+    android:padding="16dp"
+    tools:context=".vista.CrearEstudiante">
+
+    <TextView
+        android:id="@+id/txtCrearEstudiante"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Crear Estudiante"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/inputNombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Nombre"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/txtCrearEstudiante"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/inputCedula"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Cédula"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/inputNombre"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/inputEdad"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Edad"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/inputCedula"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/inputEstado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Estado"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/inputEdad"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/inputFechaInscripcion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Fecha Inscripción (yyyy-MM-dd)"
+        android:inputType="date"
+        app:layout_constraintTop_toBottomOf="@id/inputEstado"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btnCrearNuevoEstudiante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#A80000"
+        android:text="Crear"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/inputFechaInscripcion"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.3" />
+
+    <Button
+        android:id="@+id/btnCancelarCrearEstudiante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#930000"
+        android:text="Cancelar"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/inputFechaInscripcion"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

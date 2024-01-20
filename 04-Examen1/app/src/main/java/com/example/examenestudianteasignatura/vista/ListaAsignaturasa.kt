@@ -18,74 +18,61 @@ import androidx.appcompat.app.AlertDialog
 import com.example.examenestudianteasignatura.MainActivity
 import com.example.examenestudianteasignatura.R
 import com.example.examenestudianteasignatura.controlador.BaseDatosMemoria
+import com.example.examenestudianteasignatura.controlador.ListaAsignaturasControlador
 import com.example.examenestudianteasignatura.modelo.Asignatura
 import com.google.android.material.snackbar.Snackbar
 
-class ListaAsignaturas : AppCompatActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
-    val estudianteSeleccionado = BaseDatosMemoria.estudianteSelecciondo
-    var posicionItemSeleccionado = 0
+class ListaAsignaturasa : AppCompatActivity() {
+    private lateinit var controlador: ListaAsignaturasControlador
+    private lateinit var adaptador: ArrayAdapter<Asignatura>
+    private var posicionItemSeleccionado: Int = 0
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_asignaturas)
 
+        controlador = ListaAsignaturasControlador(this)
+
         val nombreProfesor = findViewById<TextView>(R.id.txtNombreEstudiante)
-        nombreProfesor.text = estudianteSeleccionado.nombre
+        nombreProfesor.text = controlador.obtenerNombreEstudiante()
 
         val listView = findViewById<ListView>(R.id.lvMaterias)
-        val adaptador = ArrayAdapter(
-            this, // contexto
-            android.R.layout.simple_list_item_1,
-            estudianteSeleccionado.asignaturas
-        )
+        adaptador = ArrayAdapter(this, android.R.layout.simple_list_item_1, controlador.obtenerAsignaturas())
         listView.adapter = adaptador
-        adaptador.notifyDataSetChanged()
 
-        val botonVerProfesores= findViewById<Button>(R.id.btnVerEstudiantes)
-        botonVerProfesores.setOnClickListener {
-            irActividad(MainActivity::class.java)
-        }
+        val botonVerProfesores = findViewById<Button>(R.id.btnVerEstudiantes)
+        botonVerProfesores.setOnClickListener { irActividad(MainActivity::class.java) }
 
         val botonAnadirListView = findViewById<Button>(R.id.btnCrearAsignatura)
-        botonAnadirListView.setOnClickListener {
-            anadirMateria(adaptador)
-        }
+        botonAnadirListView.setOnClickListener { irActividad(CrearAsignatura::class.java) }
         registerForContextMenu(listView)
+
     }
 
-    fun anadirMateria(
-        adaptador: ArrayAdapter<Asignatura>
-    ){
-        irActividad(CrearAsignatura::class.java)
-        adaptador.notifyDataSetChanged()
+
+    private fun irActividad(clase: Class<*>) {
+        val intent = Intent(this, clase)
+        startActivity(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        // Llenamos las opciones del menu
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_asignatura, menu)
-        // Obtener el id del ArrayListSeleccionado
+        menuInflater.inflate(R.menu.menu_asignatura, menu)
         val info = menuInfo as AdapterView.AdapterContextMenuInfo
-        val posicion = info.position
-        posicionItemSeleccionado = posicion
-        BaseDatosMemoria.asignaturaSeleccionada = estudianteSeleccionado.asignaturas[posicion]
+        posicionItemSeleccionado = info.position
+        controlador.seleccionarMateria(posicionItemSeleccionado)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
+        return when (item.itemId) {
             R.id.itmEditarMateria -> {
                 irActividad(EditarAsignatura::class.java)
                 return true
             }
             R.id.itmEliminarMateria -> {
+                controlador.seleccionarMateria(posicionItemSeleccionado)
                 abrirDialogo()
                 return true
             }
@@ -93,49 +80,18 @@ class ListaAsignaturas : AppCompatActivity() {
         }
     }
 
-    fun mostrarSnackbar(texto:String){
-        val snack = Snackbar.make(findViewById(R.id.lvMaterias),
-            texto, Snackbar.LENGTH_LONG)
-        snack.show()
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
-    fun abrirDialogo(){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Desea eliminar")
-        builder.setPositiveButton(
-            "Aceptar",
-            DialogInterface.OnClickListener{ dialog, which ->
-                eliminarMateria()
+    fun abrirDialogo() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Desea eliminar")
+            setPositiveButton("Aceptar") { _, _ ->
+                controlador.eliminarMateria()
             }
-        )
-
-        builder.setNegativeButton(
-            "Cancelar",
-            null
-        )
-
-        val dialogo = builder.create()
-        dialogo.show()
+            setNegativeButton("Cancelar", null)
+            create().show()
+        }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun eliminarMateria () {
-        val listView = findViewById<ListView>(R.id.lvMaterias)
-        val adaptador = ArrayAdapter(
-            this, // contexto
-            android.R.layout.simple_list_item_1,
-            estudianteSeleccionado.asignaturas
-        )
-        listView.adapter = adaptador
-        estudianteSeleccionado.asignaturas.remove(BaseDatosMemoria.asignaturaSeleccionada)
+    fun actualizarLista() {
         adaptador.notifyDataSetChanged()
-    }
-
-    fun irActividad (
-        clase: Class <*>
-    ) {
-        val intent = Intent(this, clase)
-        startActivity(intent)
     }
 }
