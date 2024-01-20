@@ -62,4 +62,37 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_ir_list_view"
         app:layout_constraintEnd_toEndOf="@+id/btn_ir_list_view"
         app:layout_constraintStart_toStartOf="@+id/btn_ir_list_view" />
+
+    <Button
+        android:id="@+id/btn_sqlite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="Sqlite"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_ciclo_vida"
+        app:layout_constraintStart_toEndOf="@+id/btn_ciclo_vida"
+        app:layout_constraintTop_toTopOf="@+id/btn_ciclo_vida"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:text="R. VIEW"
+        app:layout_constraintBottom_toTopOf="@+id/btn_sqlite"
+        app:layout_constraintEnd_toEndOf="@+id/btn_sqlite"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/btn_sqlite" />
+
+    <Button
+        android:id="@+id/btn_google_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="G. MAPS"
+        app:layout_constraintBottom_toTopOf="@+id/btn_recycler_view"
+        app:layout_constraintEnd_toEndOf="@+id/btn_recycler_view"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/btn_recycler_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>
