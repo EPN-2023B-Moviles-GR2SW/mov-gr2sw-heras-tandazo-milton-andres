@@ -1,40 +1,45 @@
 package com.example.examenestudianteasignatura.controlador
 
-// Importaciones necesarias
+import ESQLiteHelperEstudiante
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.examenestudianteasignatura.modelo.Asignatura
+import com.example.examenestudianteasignatura.modelo.ESQLiteHelperAsignatura
 import com.example.examenestudianteasignatura.vista.ListaAsignaturasa
 
 class ListaAsignaturasControlador(private val vista: ListaAsignaturasa) {
+    private val dbHelperAsignatura = ESQLiteHelperAsignatura(vista)
+    private val dbHelperEstudiante = ESQLiteHelperEstudiante(vista)
+    private var asignaturaSeleccionada: Asignatura? = null
 
-    // Métodos para interactuar con el modelo y actualizar la vista
     @RequiresApi(Build.VERSION_CODES.O)
-    fun obtenerNombreEstudiante(): String {
-        // Retorna el nombre del estudiante seleccionado
-        return BaseDatosMemoria.estudianteSeleccionado.nombre
+    fun obtenerNombreEstudiante(cedulaEstudiante: String): String {
+        //val cedulaEstudiante = vista.intent.getStringExtra("ID_ESTUDIANTE") ?: return "Nombre no disponible"
+
+        val estudiante = dbHelperEstudiante.obtenerEstudiante(cedulaEstudiante)
+        return estudiante?.nombre ?: "Nombre no disponible"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun obtenerAsignaturas(): List<Asignatura> {
-        // Retorna la lista de asignaturas del estudiante seleccionado
-        return BaseDatosMemoria.estudianteSeleccionado.asignaturas
-    }
-
-    fun anadirMateria() {
-        // Lógica para añadir una materia
-        // ...
-        vista.actualizarLista()
+    fun obtenerAsignaturas(cedulaEstudiante: String): List<Asignatura> {
+        // Implementación para obtener las asignaturas del estudiante seleccionado de la base de datos
+        return dbHelperAsignatura.obtenerAsignaturasPorEstudiante(cedulaEstudiante)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun seleccionarMateria(posicion: Int) {
-        BaseDatosMemoria.asignaturaSeleccionada = BaseDatosMemoria.estudianteSeleccionado.asignaturas[posicion]
+    fun seleccionarMateria(cedulaEstudiante: String,posicion: Int) {
+
+        val asignaturas = obtenerAsignaturas(cedulaEstudiante) //ERROR
+        asignaturaSeleccionada = if (asignaturas.size > posicion) asignaturas[posicion] else null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun eliminarMateria() {
-        BaseDatosMemoria.estudianteSeleccionado.asignaturas.remove(BaseDatosMemoria.asignaturaSeleccionada)
-        vista.actualizarLista()
+        asignaturaSeleccionada?.let {
+            dbHelperAsignatura.eliminarAsignatura(it.codigo)
+            vista.actualizarLista()
+        }
     }
+
+    // ... Resto de métodos ...
 }

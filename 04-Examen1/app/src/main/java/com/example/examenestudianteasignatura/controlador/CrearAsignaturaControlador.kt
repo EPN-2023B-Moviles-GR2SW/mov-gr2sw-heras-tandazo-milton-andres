@@ -6,8 +6,11 @@ import androidx.annotation.RequiresApi
 import com.example.examenestudianteasignatura.R
 import com.example.examenestudianteasignatura.modelo.Asignatura
 import com.example.examenestudianteasignatura.vista.CrearAsignatura
+import com.example.examenestudianteasignatura.modelo.ESQLiteHelperAsignatura
 
 class CrearAsignaturaControlador(private val vista: CrearAsignatura) {
+
+    private val dbHelper = ESQLiteHelperAsignatura(vista)
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun crearNuevaAsignatura() {
@@ -18,6 +21,10 @@ class CrearAsignaturaControlador(private val vista: CrearAsignatura) {
         val profesorACargo = vista.findViewById<EditText>(R.id.inputProfesorACargo).text.toString()
 
         val nuevaAsignatura = Asignatura(nombre, codigo, horas, creditos, profesorACargo)
-        BaseDatosMemoria.estudianteSeleccionado.asignaturas.add(nuevaAsignatura)
+
+        // Insertar la nueva asignatura en la base de datos SQLite
+        val id = dbHelper.crearAsignatura(nuevaAsignatura)
+
+        // Aquí puedes manejar el resultado de la inserción (por ejemplo, mostrar un mensaje de confirmación o error)
     }
 }

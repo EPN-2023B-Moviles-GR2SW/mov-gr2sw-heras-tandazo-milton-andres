@@ -5,17 +5,10 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
 import androidx.annotation.RequiresApi
 import com.example.examenestudianteasignatura.MainActivity
 import com.example.examenestudianteasignatura.R
-import com.example.examenestudianteasignatura.controlador.BaseDatosMemoria
 import com.example.examenestudianteasignatura.controlador.CrearEstudianteControlador
-import com.example.examenestudianteasignatura.modelo.Estudiante
-import com.google.android.material.snackbar.Snackbar
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 class CrearEstudiante : AppCompatActivity() {
     private lateinit var controlador: CrearEstudianteControlador
