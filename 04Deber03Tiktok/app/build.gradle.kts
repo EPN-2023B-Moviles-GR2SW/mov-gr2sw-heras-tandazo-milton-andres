@@ -4,17 +4,21 @@ plugins {
 }
 
 android {
-    namespace = "com.example.a04d"
-    compileSdk = 33
+    namespace = "com.example.a04_deber03_tiktok"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.a04d"
+        applicationId = "com.example.a04_deber03_tiktok"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures{
+        viewBinding = true
     }
 
     buildTypes {
@@ -27,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
@@ -44,4 +48,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
 }
