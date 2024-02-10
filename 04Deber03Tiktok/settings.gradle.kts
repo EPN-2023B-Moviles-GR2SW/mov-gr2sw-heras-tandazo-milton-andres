@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "04-Deber-03-Tiktok"
+rootProject.name = "04-Deber03-Tiktok"
 include(":app")
+ 

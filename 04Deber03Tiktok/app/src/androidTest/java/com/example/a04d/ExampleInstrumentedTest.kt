@@ -1,4 +1,4 @@
-package com.example.a04_deber_03_tiktok
+package com.example.a04d
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.a04_deber_03_tiktok", appContext.packageName)
+        assertEquals("com.example.a04d", appContext.packageName)
     }
 }
