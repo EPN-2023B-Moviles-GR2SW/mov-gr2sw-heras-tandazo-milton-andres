@@ -1,27 +1,47 @@
 package com.example.a04_deber03_tiktok
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
+import com.example.a04_deber03_tiktok.adapter.VideoAdapter
 import com.example.a04_deber03_tiktok.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var adapter: VideoAdapter
     private val videos = ArrayList<Video>()
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.bottomNavBar.setOnItemSelectedListener {menuItem->
+            when(menuItem.itemId){
+                R.id.bottom_menu_home->{
+                    startActivity(Intent(this,MainActivity::class.java))
+                }
+                R.id.bottom_menu_add_video->{
+                    Toast.makeText(this, "Agregar videos", Toast.LENGTH_SHORT).show()
+                }
+                R.id.bottom_menu_profile->{
+                    Toast.makeText(this, "Mi perfil", Toast.LENGTH_SHORT).show()
+
+                    startActivity(Intent(this,BandejaEntradaActivity::class.java))
+                }
+            }
+            false
+        }
         videos.add(
             Video(
-                "Big Buck Bunny",
-                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                "Game of Thrones",
+                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+
             )
         )
 
@@ -34,8 +54,8 @@ class MainActivity : AppCompatActivity() {
 
         videos.add(
             Video(
-                "For Bigger Blazes",
-                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                "Big Buck Bunny",
+                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             )
         )
 
@@ -64,6 +84,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+
 
     override fun onPause() {
         super.onPause()

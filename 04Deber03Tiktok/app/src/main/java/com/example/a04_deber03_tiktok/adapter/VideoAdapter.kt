@@ -1,4 +1,4 @@
-package com.example.a04_deber03_tiktok
+package com.example.a04_deber03_tiktok.adapter
 
 import android.content.Context
 import android.net.Uri
@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.a04_deber03_tiktok.ExoPlayerItem
+import com.example.a04_deber03_tiktok.Video
 import com.example.a04_deber03_tiktok.databinding.ListVideoBinding
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
