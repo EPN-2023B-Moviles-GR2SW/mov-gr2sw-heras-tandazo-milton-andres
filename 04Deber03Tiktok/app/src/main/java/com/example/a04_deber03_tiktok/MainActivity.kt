@@ -47,14 +47,14 @@ class MainActivity : AppCompatActivity() {
 
         videos.add(
             Video(
-                "Elephant Dream",
+                "Mi pana santi cuando ve un traba",
                 "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
             )
         )
 
         videos.add(
             Video(
-                "Big Buck Bunny",
+                "Yo tengo una mente, con cuatro computadora",
                 "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             )
         )

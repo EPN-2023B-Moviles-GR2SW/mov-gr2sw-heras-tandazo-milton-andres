@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "665612662998",
+    "project_id": "deber03-tiktok-91132",
+    "storage_bucket": "deber03-tiktok-91132.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665612662998:android:9b8052bdee9988967df177",
+        "android_client_info": {
+          "package_name": "com.example.a04_deber03_tiktok"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcAF_g-rD7-4YThoFRVFe3ZDzDkKuRnlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
